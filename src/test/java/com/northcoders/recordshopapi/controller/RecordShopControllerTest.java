@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static com.northcoders.recordshopapi.model.Album.Genre.JAZZ;
 import static com.northcoders.recordshopapi.model.Album.Genre.ROCK;
@@ -66,6 +67,19 @@ class RecordShopControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Album2"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].genre").value("JAZZ"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].quantity").value(5));
+    }
 
+    @Test
+    void getAlbumById() throws Exception {
+        //Arrange
+        Album albumOne = new Album(1L, "Album1", "Artiste1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5);
+        when(recordShopServiceImpl.getAlbumById(1L)).thenReturn(Optional.of(albumOne));
+
+        //Act and Assert
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/albums/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artiste").value("Artiste1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Good Album1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value("ROCK"));
     }
 }
