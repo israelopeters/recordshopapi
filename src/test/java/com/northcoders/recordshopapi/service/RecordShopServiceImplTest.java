@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.northcoders.recordshopapi.model.Album.Genre.JAZZ;
 import static com.northcoders.recordshopapi.model.Album.Genre.ROCK;
@@ -43,5 +44,24 @@ public class RecordShopServiceImplTest {
         //Assert
         assertThat(actual).hasSize(3);
         assertThat(actual).isEqualTo(albums);
+    }
+
+    @Test
+    @DisplayName("getAllAlbumById() returns album of id")
+    public void getAlbumByIdTest() {
+        //Arrange
+        Album expectedOne = new Album(1L, "Album1", "AlbumName1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5);
+        Album expectedTwo = new Album(2L, "Album2", "AlbumName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7);
+
+        when(repository.findById(1L)).thenReturn(Optional.of(expectedOne));
+        when(repository.findById(3L)).thenReturn(Optional.empty());
+
+        //Act
+        Album actualOne = recordShopServiceImpl.getAlbumById(1L).get();
+        Optional<Album> actualTwo = recordShopServiceImpl.getAlbumById(3L);
+
+        //Assert
+        assertThat(actualOne).isEqualTo(expectedOne);
+        assertTrue(actualTwo.isEmpty());
     }
 }
