@@ -27,4 +27,9 @@ public class RecordShopServiceImpl implements RecordShopService {
         return repository.findById(id);
     }
 
+    @Override
+    public Album addAlbum(Album album) {
+        return repository.save(album);
+    }
+
 }

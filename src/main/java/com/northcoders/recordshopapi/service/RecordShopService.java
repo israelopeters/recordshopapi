@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface RecordShopService {
     List<Album> getAllAlbums();
     Optional<Album> getAlbumById(Long id);
-
+    Album addAlbum(Album album);
 }

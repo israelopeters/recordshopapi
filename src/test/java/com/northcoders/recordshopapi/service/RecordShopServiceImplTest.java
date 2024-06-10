@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -51,7 +52,6 @@ public class RecordShopServiceImplTest {
     public void getAlbumByIdTest() {
         //Arrange
         Album expectedOne = new Album(1L, "Album1", "AlbumName1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5);
-        Album expectedTwo = new Album(2L, "Album2", "AlbumName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7);
 
         when(repository.findById(1L)).thenReturn(Optional.of(expectedOne));
         when(repository.findById(3L)).thenReturn(Optional.empty());
@@ -64,4 +64,22 @@ public class RecordShopServiceImplTest {
         assertThat(actualOne).isEqualTo(expectedOne);
         assertTrue(actualTwo.isEmpty());
     }
+
+    @Test
+    @DisplayName("addAlbum() returns the album")
+    public void addAlbum() {
+        //Arrange
+        Album album = new Album(2L, "Album2", "ArtisteName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7);
+        when(repository.save(album)).thenReturn(album);
+
+        //Act
+        Album actual = recordShopServiceImpl.addAlbum(album);
+
+        //Assert
+        assertThat(actual.getId()).isEqualTo(2L);
+        assertThat(actual.getName()).isEqualTo("Album2");
+        assertThat(actual.getGenre()).isEqualTo(JAZZ);
+
+    }
+
 }
