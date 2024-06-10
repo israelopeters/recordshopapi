@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.event.annotation.PrepareTestInstance;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -79,7 +80,24 @@ public class RecordShopServiceImplTest {
         assertThat(actual.getId()).isEqualTo(2L);
         assertThat(actual.getName()).isEqualTo("Album2");
         assertThat(actual.getGenre()).isEqualTo(JAZZ);
+    }
 
+    @Test
+    @DisplayName("updateAlbum method returns an album with a different quantity")
+    public void updateAlbum() {
+        //Arrange
+        Album originalAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7);
+        Album updatedAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 6);
+
+        //Set the behavior of the two method calls within the mocked object
+        when(repository.findById(2L)).thenReturn(Optional.of(updatedAlbum));
+        when(repository.save(updatedAlbum)).thenReturn(updatedAlbum);
+
+        //Act
+        Album actual = recordShopServiceImpl.updateAlbum(2L, 6);
+
+        //Assert
+        assertThat(actual).isEqualTo(updatedAlbum);
     }
 
 }
