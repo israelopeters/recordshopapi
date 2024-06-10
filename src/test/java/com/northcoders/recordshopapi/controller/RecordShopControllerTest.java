@@ -107,5 +107,22 @@ class RecordShopControllerTest {
 
     }
 
+    @Test
+    @DisplayName("PUT returns the updated album and the ACCEPTED status code")
+    public void updateAlbum () throws Exception {
+        //Arrange
+        Album updatedAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, null, 20, "Fine Album2", 6);
 
+        when(recordShopServiceImpl.updateAlbum(2L, updatedAlbum)).thenReturn(updatedAlbum);
+
+        //Act and Assert
+        this.mockMvcController.perform(MockMvcRequestBuilders.put("/api/v1/albums/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updatedAlbum))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(6));
+
+        verify(recordShopServiceImpl, times(1)).updateAlbum(2L, updatedAlbum);
+    }
 }
