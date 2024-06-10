@@ -89,7 +89,7 @@ class RecordShopControllerTest {
     }
 
     @Test
-    @DisplayName("addAlbum returns the album and a CREATED status code")
+    @DisplayName("POST returns the album and a CREATED status code")
     public void addAlbum() throws Exception {
         //Arrange
         Album album = new Album(1L, "Album1", "Artiste1", ROCK, null, 10, "Good Album1", 5);
@@ -106,4 +106,6 @@ class RecordShopControllerTest {
         verify(recordShopServiceImpl, times(1)).addAlbum(album);
 
     }
+
+
 }

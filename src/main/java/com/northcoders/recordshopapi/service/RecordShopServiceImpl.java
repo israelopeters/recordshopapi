@@ -33,12 +33,12 @@ public class RecordShopServiceImpl implements RecordShopService {
     }
 
     @Override
-    public Album updateAlbum(Long id, int newQuantity) {
+    public Album updateAlbum(Long id, Album newAlbum) {
         Optional<Album> updatedAlbum =
                 repository.findById(id)
-                .map(album -> {
-                    album.setQuantity(newQuantity);
-                    return repository.save(album);
+                .map(oldAlbum -> {
+                    oldAlbum.setQuantity(newAlbum.getQuantity());
+                    return repository.save(oldAlbum);
                 });
         return updatedAlbum.orElse(null);
     }

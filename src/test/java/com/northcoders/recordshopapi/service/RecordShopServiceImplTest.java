@@ -90,11 +90,11 @@ public class RecordShopServiceImplTest {
         Album updatedAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 6);
 
         //Set the behavior of the two method calls within the mocked object
-        when(repository.findById(2L)).thenReturn(Optional.of(updatedAlbum));
-        when(repository.save(updatedAlbum)).thenReturn(updatedAlbum);
+        when(repository.findById(2L)).thenReturn(Optional.of(originalAlbum));
+        when(repository.save(originalAlbum)).thenReturn(updatedAlbum);
 
         //Act
-        Album actual = recordShopServiceImpl.updateAlbum(2L, 6);
+        Album actual = recordShopServiceImpl.updateAlbum(2L, updatedAlbum);
 
         //Assert
         assertThat(actual).isEqualTo(updatedAlbum);
