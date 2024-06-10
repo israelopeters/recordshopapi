@@ -33,7 +33,7 @@ public class Album {
     @Column(nullable = false)
     Genre genre;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     LocalDate year;
 
     @Column

@@ -1,6 +1,7 @@
 package com.northcoders.recordshopapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.CreatorProperty;
 import com.northcoders.recordshopapi.model.Album;
 import com.northcoders.recordshopapi.repository.RecordShopRepository;
 import com.northcoders.recordshopapi.service.RecordShopService;
@@ -13,10 +14,14 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import com.fasterxml.jackson.datatype.jsr310.*;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,7 +31,7 @@ import java.util.Optional;
 import static com.northcoders.recordshopapi.model.Album.Genre.JAZZ;
 import static com.northcoders.recordshopapi.model.Album.Genre.ROCK;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -81,5 +86,24 @@ class RecordShopControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.artiste").value("Artiste1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Good Album1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value("ROCK"));
+    }
+
+    @Test
+    @DisplayName("addAlbum returns the album and a CREATED status code")
+    public void addAlbum() throws Exception {
+        //Arrange
+        Album album = new Album(1L, "Album1", "Artiste1", ROCK, null, 10, "Good Album1", 5);
+        when(recordShopServiceImpl.addAlbum(album)).thenReturn(album);
+
+        //Act and Assert
+        this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/albums")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(album))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artiste").value("Artiste1"));
+
+        verify(recordShopServiceImpl, times(1)).addAlbum(album);
+
     }
 }
