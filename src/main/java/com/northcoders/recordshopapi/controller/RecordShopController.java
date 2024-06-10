@@ -45,4 +45,9 @@ public class RecordShopController {
         recordShopService.deleteAlbumById(id);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Album>> getAlbumsByArtiste(@RequestParam String artiste) {
+        return new ResponseEntity<>(recordShopService.getAlbumsByArtiste(artiste), HttpStatus.OK);
+    }
+
 }

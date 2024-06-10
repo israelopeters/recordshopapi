@@ -134,4 +134,21 @@ class RecordShopControllerTest {
         this.mockMvcController.perform(MockMvcRequestBuilders.delete("/api/v1/albums/delete/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    void getAlbumByArtiste() throws Exception {
+        //Arrange
+        List<Album> albums = List.of(
+                new Album(1L, "Album1", "ArtisteName1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtisteName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtisteName2", JAZZ, LocalDate.of(2003, 3, 3), 30, "Great Album3", 9)
+        );
+        when(recordShopServiceImpl.getAlbumsByArtiste("ArtisteName2")).thenReturn(albums);
+
+        //Act and Assert
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/albums?artiste=ArtisteName2"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].artiste").value("ArtisteName2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].artiste").value("ArtisteName2"));
+    }
 }

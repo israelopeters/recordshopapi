@@ -11,4 +11,6 @@ public interface RecordShopService {
     Album addAlbum(Album album);
     Album updateAlbum(Long id, int newQuantity);
     void deleteAlbumById(Long id);
+    List<Album> getAlbumsByArtiste(String artiste);
+
 }

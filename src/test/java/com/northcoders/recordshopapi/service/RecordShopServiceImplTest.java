@@ -7,18 +7,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.event.annotation.PrepareTestInstance;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.northcoders.recordshopapi.model.Album.Genre.JAZZ;
-import static com.northcoders.recordshopapi.model.Album.Genre.ROCK;
+import static com.northcoders.recordshopapi.model.Album.Genre.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DataJpaTest
@@ -101,5 +98,25 @@ public class RecordShopServiceImplTest {
         assertThat(actual).isEqualTo(updatedAlbum);
 
     }
+
+    @Test
+    @DisplayName("getAlbumsByArtiste() returns list of albums with the given artiste")
+    public void getAlbumsByArtiste() {
+        //Arrange
+        List<Album> albums = List.of(
+                new Album(1L, "Album1", "ArtisteName1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtisteName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtisteName2", JAZZ, LocalDate.of(2003, 3, 3), 30, "Great Album3", 9)
+        );
+        when(repository.findByArtiste("ArtisteName2")).thenReturn(albums.subList(1,3));
+
+        //Act
+        List<Album> actual = recordShopServiceImpl.getAlbumsByArtiste("ArtisteName2");
+
+        //Assert
+        assertThat(actual).hasSize(2);
+        assertThat(actual).isEqualTo(albums.subList(1,3));
+    }
+
 
 }
