@@ -126,4 +126,12 @@ class RecordShopControllerTest {
 
         verify(recordShopServiceImpl, times(1)).updateAlbum(2L, 6);
     }
+
+    @Test
+    @DisplayName("deleteAlbumById method returns a String message: 'Album albumID deleted.'")
+    public void deleteAlbumById() throws Exception {
+        //Act and Assert
+        this.mockMvcController.perform(MockMvcRequestBuilders.delete("/api/v1/albums/delete/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }

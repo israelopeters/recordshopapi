@@ -35,8 +35,14 @@ public class RecordShopController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Album> updateAlbum(@PathVariable("id") long id, @RequestBody int newQuantity) {
+    public ResponseEntity<Album> updateAlbum(@PathVariable long id, @RequestBody int newQuantity) {
         Album albumUpdated = recordShopService.updateAlbum(id, newQuantity);
         return new ResponseEntity<>(albumUpdated, HttpStatus.ACCEPTED);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteAlbumById(@PathVariable long id) {
+        recordShopService.deleteAlbumById(id);
+    }
+
 }

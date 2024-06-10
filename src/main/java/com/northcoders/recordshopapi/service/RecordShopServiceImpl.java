@@ -43,4 +43,9 @@ public class RecordShopServiceImpl implements RecordShopService {
         return updatedAlbum.orElse(null);
     }
 
+    @Override
+    public void deleteAlbumById(Long id) {
+        repository.deleteById(id);
+    }
+
 }

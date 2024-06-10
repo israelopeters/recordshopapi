@@ -18,6 +18,7 @@ import static com.northcoders.recordshopapi.model.Album.Genre.JAZZ;
 import static com.northcoders.recordshopapi.model.Album.Genre.ROCK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DataJpaTest
@@ -98,6 +99,7 @@ public class RecordShopServiceImplTest {
 
         //Assert
         assertThat(actual).isEqualTo(updatedAlbum);
+
     }
 
 }
