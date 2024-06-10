@@ -96,7 +96,7 @@ class RecordShopControllerTest {
         when(recordShopServiceImpl.addAlbum(album)).thenReturn(album);
 
         //Act and Assert
-        this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/albums")
+        this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/albums/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(album))
                 .accept(MediaType.APPLICATION_JSON))

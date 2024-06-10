@@ -28,7 +28,7 @@ public class RecordShopController {
         return new ResponseEntity<>(recordShopService.getAlbumById(id).get(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<Album> addAlbum(@RequestBody Album album) {
         Album albumToAdd = recordShopService.addAlbum(album);
         return new ResponseEntity<>(albumToAdd, HttpStatus.CREATED);
