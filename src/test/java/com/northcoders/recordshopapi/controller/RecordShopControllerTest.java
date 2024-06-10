@@ -117,7 +117,7 @@ class RecordShopControllerTest {
         when(recordShopServiceImpl.updateAlbum(2L, 6)).thenReturn(updatedAlbum);
 
         //Act and Assert
-        this.mockMvcController.perform(MockMvcRequestBuilders.put("/api/v1/albums/2")
+        this.mockMvcController.perform(MockMvcRequestBuilders.put("/api/v1/albums/update/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(6))
                 .accept(MediaType.APPLICATION_JSON))
