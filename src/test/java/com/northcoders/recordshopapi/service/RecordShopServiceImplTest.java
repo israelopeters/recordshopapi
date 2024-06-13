@@ -118,5 +118,23 @@ public class RecordShopServiceImplTest {
         assertThat(actual).isEqualTo(albums.subList(1,3));
     }
 
+    @Test
+    @DisplayName("getAlbumsByGenre() returns list of albums with the given genre")
+    public void getAlbumsByGenre() {
+        //Arrange
+        List<Album> albums = List.of(
+                new Album(1L, "Album1", "ArtisteName1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtisteName2", COUNTRY, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtisteName2", ROCK, LocalDate.of(2003, 3, 3), 30, "Great Album3", 9)
+        );
+        when(repository.findByGenre(ROCK)).thenReturn(List.of(albums.get(0), albums.get(2)));
+
+        //Act
+        List<Album> actual = recordShopServiceImpl.getAlbumsByGenre(ROCK);
+
+        //Assert
+        assertThat(actual).hasSize(2);
+        assertThat(actual).isEqualTo(List.of(albums.get(0), albums.get(2)));
+    }
 
 }

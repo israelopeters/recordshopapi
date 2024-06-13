@@ -45,9 +45,14 @@ public class RecordShopController {
         recordShopService.deleteAlbumById(id);
     }
 
-    @GetMapping
+    @GetMapping("/artiste")
     public ResponseEntity<List<Album>> getAlbumsByArtiste(@RequestParam String artiste) {
         return new ResponseEntity<>(recordShopService.getAlbumsByArtiste(artiste), HttpStatus.OK);
+    }
+
+    @GetMapping("/genre")
+    public ResponseEntity<List<Album>> getAlbumsByGenre(@RequestParam Album.Genre genre) {
+        return new ResponseEntity<>(recordShopService.getAlbumsByGenre(genre), HttpStatus.OK);
     }
 
 }

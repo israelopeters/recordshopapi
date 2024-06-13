@@ -12,5 +12,5 @@ public interface RecordShopService {
     Album updateAlbum(Long id, int newQuantity);
     void deleteAlbumById(Long id);
     List<Album> getAlbumsByArtiste(String artiste);
-
+    List<Album> getAlbumsByGenre(Album.Genre genre);
 }

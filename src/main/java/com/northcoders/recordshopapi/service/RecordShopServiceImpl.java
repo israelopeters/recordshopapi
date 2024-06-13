@@ -54,4 +54,9 @@ public class RecordShopServiceImpl implements RecordShopService {
         return repository.findByArtiste(artiste);
     }
 
+    @Override
+    public List<Album> getAlbumsByGenre(Album.Genre genre) {
+        return repository.findByGenre(genre);
+    }
+
 }
