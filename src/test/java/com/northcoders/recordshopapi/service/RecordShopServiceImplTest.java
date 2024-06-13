@@ -156,4 +156,22 @@ public class RecordShopServiceImplTest {
         assertThat(actual).isEqualTo(List.of(albums.get(1), albums.get(2)));
     }
 
+    @Test
+    @DisplayName("getAlbumInfoByName() returns the album info with the given name")
+    public void getAlbumInfoByName() {
+        //Arrange
+        List<Album> albums = List.of(
+                new Album(1L, "Album1", "ArtisteName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtisteName2", COUNTRY, Year.of(2002), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtisteName3", ROCK, Year.of(2002), 30, "Great Album3", 9)
+        );
+        when(repository.findByName("Album2")).thenReturn(albums.get(1));
+
+        //Act
+        String actual = recordShopServiceImpl.getAlbumInfoByName("Album2");
+
+        //Assert
+        assertThat(actual).isEqualTo(albums.get(1).toString());
+    }
+
 }

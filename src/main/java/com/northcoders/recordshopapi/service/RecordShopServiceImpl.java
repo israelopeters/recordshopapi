@@ -62,7 +62,11 @@ public class RecordShopServiceImpl implements RecordShopService {
     @Override
     public List<Album> getAlbumsByYear(Year year) {
         return repository.findByYear(year);
+    }
 
+    @Override
+    public String getAlbumInfoByName(String name) {
+        return repository.findByName(name).toString();
     }
 
 }

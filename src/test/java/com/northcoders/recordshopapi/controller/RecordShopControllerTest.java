@@ -133,6 +133,7 @@ class RecordShopControllerTest {
         //Act and Assert
         this.mockMvcController.perform(MockMvcRequestBuilders.delete("/api/v1/albums/delete/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+        verify(recordShopServiceImpl, times(1)).deleteAlbumById(1L);
     }
 
     @Test
@@ -187,5 +188,23 @@ class RecordShopControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].year").value("2001"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].year").value("2001"));
+    }
+
+    @Test
+    @DisplayName("getAlbumInfoByName returns the album info with the given name and the OK status code")
+    void getAlbumInfoByName() throws Exception {
+        //Arrange
+        List<Album> albums = List.of(
+                new Album(1L, "Album1", "ArtisteName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2001), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtisteName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
+        );
+        when(recordShopServiceImpl.getAlbumInfoByName("Album3")).thenReturn(albums.get(2).toString());
+
+        //Act and Assert
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/albums/name?name=Album3"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(recordShopServiceImpl, times(1)).getAlbumInfoByName("Album3");
     }
 }

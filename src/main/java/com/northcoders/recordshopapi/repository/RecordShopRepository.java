@@ -18,4 +18,6 @@ public interface RecordShopRepository extends CrudRepository<Album, Long> {
 
     @Query("SELECT Y FROM Album Y where Y.year = ?1")
     List<Album> findByYear(Year year);
+
+    Album findByName(String name);
 }

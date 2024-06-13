@@ -59,4 +59,9 @@ public class RecordShopController {
         return new ResponseEntity<>(recordShopService.getAlbumsByYear(year), HttpStatus.OK);
     }
 
+    @GetMapping("/name")
+    public ResponseEntity<String> getAlbumInfoByName(String name) {
+        return new ResponseEntity<>(recordShopService.getAlbumInfoByName(name), HttpStatus.OK);
+    }
+
 }
