@@ -1,5 +1,9 @@
 package com.northcoders.recordshopapi.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.YearDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.YearSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,8 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.Set;
+import java.time.Year;
 
 @Entity
 @Data
@@ -33,8 +36,9 @@ public class Album {
     @Column(nullable = false)
     Genre genre;
 
-    //@Column(nullable = false)
-    LocalDate year;
+    @JsonSerialize(using = YearSerializer.class)
+    @Column(nullable = false)
+    Year year;
 
     @Column
     int tracks;

@@ -20,12 +20,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.fasterxml.jackson.datatype.jsr310.*;
 
 
-import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import static com.northcoders.recordshopapi.model.Album.Genre.JAZZ;
@@ -55,13 +53,13 @@ class RecordShopControllerTest {
     }
 
     @Test
-    @DisplayName("GET / returns a list of all albums")
+    @DisplayName("GET / returns a list of all albums and the OK status code")
     void getAllAlbums() throws Exception {
         //Arrange
         List<Album> albums = List.of(
-                new Album(1L, "Album1", "AlbumName1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5),
-                new Album(2L, "Album2", "AlbumName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7),
-                new Album(3L, "Album3", "AlbumName3", JAZZ, LocalDate.of(2003, 3, 3), 30, "Great Album3", 9)
+                new Album(1L, "Album1", "AlbumName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "AlbumName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "AlbumName3", JAZZ, Year.of(2003), 30, "Great Album3", 9)
         );
         when(recordShopServiceImpl.getAllAlbums()).thenReturn(albums);
 
@@ -75,9 +73,10 @@ class RecordShopControllerTest {
     }
 
     @Test
+    @DisplayName("GET /{id} returns the album with given id and the OK status code")
     void getAlbumById() throws Exception {
         //Arrange
-        Album albumOne = new Album(1L, "Album1", "Artiste1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5);
+        Album albumOne = new Album(1L, "Album1", "Artiste1", ROCK, Year.of(2001), 10, "Good Album1", 5);
         when(recordShopServiceImpl.getAlbumById(1L)).thenReturn(Optional.of(albumOne));
 
         //Act and Assert
@@ -92,7 +91,7 @@ class RecordShopControllerTest {
     @DisplayName("POST returns the album and a CREATED status code")
     public void addAlbum() throws Exception {
         //Arrange
-        Album album = new Album(1L, "Album1", "Artiste1", ROCK, null, 10, "Good Album1", 5);
+        Album album = new Album(1L, "Album1", "Artiste1", ROCK, Year.of(2001), 10, "Good Album1", 5);
         when(recordShopServiceImpl.addAlbum(album)).thenReturn(album);
 
         //Act and Assert
@@ -101,7 +100,8 @@ class RecordShopControllerTest {
                 .content(mapper.writeValueAsString(album))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.artiste").value("Artiste1"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artiste").value("Artiste1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.year").value("2001"));
 
         verify(recordShopServiceImpl, times(1)).addAlbum(album);
 
@@ -111,8 +111,8 @@ class RecordShopControllerTest {
     @DisplayName("PUT returns the updated album and the ACCEPTED status code")
     public void updateAlbum () throws Exception {
         //Arrange
-        Album originalAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, null, 20, "Fine Album2", 7);
-        Album updatedAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, null, 20, "Fine Album2", 6);
+        Album originalAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7);
+        Album updatedAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2002), 20, "Fine Album2", 6);
 
         when(recordShopServiceImpl.updateAlbum(2L, 6)).thenReturn(updatedAlbum);
 
@@ -128,7 +128,7 @@ class RecordShopControllerTest {
     }
 
     @Test
-    @DisplayName("deleteAlbumById method returns a String message: 'Album albumID deleted.'")
+    @DisplayName("DEL returns the OK status code.")
     public void deleteAlbumById() throws Exception {
         //Act and Assert
         this.mockMvcController.perform(MockMvcRequestBuilders.delete("/api/v1/albums/delete/1"))
@@ -136,12 +136,13 @@ class RecordShopControllerTest {
     }
 
     @Test
+    @DisplayName("getAlbumByArtiste returns a list of albums with the given artiste name and the OK status code")
     void getAlbumByArtiste() throws Exception {
         //Arrange
         List<Album> albums = List.of(
-                new Album(1L, "Album1", "ArtisteName1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5),
-                new Album(2L, "Album2", "ArtisteName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7),
-                new Album(3L, "Album3", "ArtisteName2", JAZZ, LocalDate.of(2003, 3, 3), 30, "Great Album3", 9)
+                new Album(1L, "Album1", "ArtisteName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtisteName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
         );
         when(recordShopServiceImpl.getAlbumsByArtiste("ArtisteName2")).thenReturn(albums.subList(1,3));
 
@@ -153,12 +154,13 @@ class RecordShopControllerTest {
     }
 
     @Test
+    @DisplayName("getAlbumByGenre returns a list of albums with the given genre and the OK status code")
     void getAlbumByGenre() throws Exception {
         //Arrange
         List<Album> albums = List.of(
-                new Album(1L, "Album1", "ArtisteName1", ROCK, LocalDate.of(2001, 1, 1), 10, "Good Album1", 5),
-                new Album(2L, "Album2", "ArtisteName2", JAZZ, LocalDate.of(2002, 2, 2), 20, "Fine Album2", 7),
-                new Album(3L, "Album3", "ArtisteName2", JAZZ, LocalDate.of(2003, 3, 3), 30, "Great Album3", 9)
+                new Album(1L, "Album1", "ArtisteName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtisteName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
         );
         when(recordShopServiceImpl.getAlbumsByGenre(Album.Genre.JAZZ)).thenReturn(albums.subList(1, 3));
 
@@ -167,5 +169,23 @@ class RecordShopControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].genre").value("JAZZ"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].genre").value("JAZZ"));
+    }
+
+    @Test
+    @DisplayName("getAlbumByYear returns a list of albums with the given year and the OK status code")
+    void getAlbumByYear() throws Exception {
+        //Arrange
+        List<Album> albums = List.of(
+                new Album(1L, "Album1", "ArtisteName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2001), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtisteName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
+        );
+        when(recordShopServiceImpl.getAlbumsByYear(Year.of(2001))).thenReturn(albums.subList(0, 2));
+
+        //Act and Assert
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/albums/year?year=2001"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].year").value("2001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].year").value("2001"));
     }
 }

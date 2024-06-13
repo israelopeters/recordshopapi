@@ -4,8 +4,8 @@ import com.northcoders.recordshopapi.model.Album;
 import com.northcoders.recordshopapi.repository.RecordShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +57,12 @@ public class RecordShopServiceImpl implements RecordShopService {
     @Override
     public List<Album> getAlbumsByGenre(Album.Genre genre) {
         return repository.findByGenre(genre);
+    }
+
+    @Override
+    public List<Album> getAlbumsByYear(Year year) {
+        return repository.findByYear(year);
+
     }
 
 }

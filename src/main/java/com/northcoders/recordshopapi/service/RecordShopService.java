@@ -2,6 +2,7 @@ package com.northcoders.recordshopapi.service;
 
 import com.northcoders.recordshopapi.model.Album;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,4 +14,6 @@ public interface RecordShopService {
     void deleteAlbumById(Long id);
     List<Album> getAlbumsByArtiste(String artiste);
     List<Album> getAlbumsByGenre(Album.Genre genre);
+    List<Album> getAlbumsByYear(Year year);
+
 }
