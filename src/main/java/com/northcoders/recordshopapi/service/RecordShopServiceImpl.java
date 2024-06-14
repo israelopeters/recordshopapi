@@ -47,11 +47,18 @@ public class RecordShopServiceImpl implements RecordShopService {
 
     @Override
     @CachePut(value = "album", key = "#id")
-    public Album updateAlbum(Long id, int newQuantity) {
+    public Album updateAlbum(Long id, Album updatedAlbum) {
         Optional<Album> album = repository.findById(id);
         if (album.isPresent()) {
-            album = album.map(oldAlbum -> {oldAlbum.setQuantity(newQuantity);
-                    return repository.save(oldAlbum);}
+            album = album.map(oldAlbum -> {
+                oldAlbum.setName(updatedAlbum.getName());
+                oldAlbum.setArtist(updatedAlbum.getArtist());
+                oldAlbum.setGenre(updatedAlbum.getGenre());
+                oldAlbum.setYear(updatedAlbum.getYear());
+                oldAlbum.setTracks(updatedAlbum.getTracks());
+                oldAlbum.setDescription(updatedAlbum.getDescription());
+                oldAlbum.setQuantity(updatedAlbum.getQuantity());
+                return repository.save(oldAlbum);}
             );
         } else {
             throw new AlbumNotFoundException(String.format("Cannot find Album with id '%d'", id));

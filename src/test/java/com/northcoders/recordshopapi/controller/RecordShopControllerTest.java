@@ -106,20 +106,26 @@ class RecordShopControllerTest {
     @DisplayName("PUT returns the updated album and the ACCEPTED status code")
     public void updateAlbum () throws Exception {
         //Arrange
-        Album originalAlbum = new Album(2L, "Album2", "ArtistName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7);
+        Album originalAlbum = new Album(2L, "Album1", "ArtistName1", JAZZ, Year.of(2001), 10, "Fine Album1", 7);
         Album updatedAlbum = new Album(2L, "Album2", "ArtistName2", JAZZ, Year.of(2002), 20, "Fine Album2", 6);
 
-        when(recordShopServiceImpl.updateAlbum(2L, 6)).thenReturn(updatedAlbum);
+        when(recordShopServiceImpl.updateAlbum(2L, updatedAlbum)).thenReturn(updatedAlbum);
 
         //Act and Assert
         this.mockMvcController.perform(MockMvcRequestBuilders.put("/api/v1/albums/update/2")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(6))
+                .content(mapper.writeValueAsString(updatedAlbum))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(6));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Album2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artist").value("ArtistName2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value("JAZZ"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.year").value("2002"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.tracks").value("20"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Fine Album2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value("6"));
 
-        verify(recordShopServiceImpl, times(1)).updateAlbum(2L, 6);
+        verify(recordShopServiceImpl, times(1)).updateAlbum(2L, updatedAlbum);
     }
 
     @Test

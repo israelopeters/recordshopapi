@@ -91,7 +91,7 @@ public class RecordShopServiceImplTest {
         when(repository.save(originalAlbum)).thenReturn(updatedAlbum);
 
         //Act
-        Album actual = recordShopServiceImpl.updateAlbum(2L, 6);
+        Album actual = recordShopServiceImpl.updateAlbum(2L, updatedAlbum);
 
         //Assert
         assertThat(actual).isEqualTo(updatedAlbum);
