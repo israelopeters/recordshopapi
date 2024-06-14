@@ -12,7 +12,7 @@ public interface RecordShopService {
     Album addAlbum(Album album);
     Album updateAlbum(Long id, int newQuantity);
     void deleteAlbumById(Long id);
-    List<Album> getAlbumsByArtiste(String artiste);
+    List<Album> getAlbumsByArtist(String artist);
     List<Album> getAlbumsByGenre(Album.Genre genre);
     List<Album> getAlbumsByYear(Year year);
     String getAlbumInfoByName(String name);

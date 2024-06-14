@@ -1,5 +1,6 @@
 package com.northcoders.recordshopapi.service;
 
+import com.northcoders.recordshopapi.exception.AlbumNotFoundException;
 import com.northcoders.recordshopapi.model.Album;
 import com.northcoders.recordshopapi.repository.RecordShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,12 @@ public class RecordShopServiceImpl implements RecordShopService {
 
     @Override
     public Optional<Album> getAlbumById(Long id) {
-        return repository.findById(id);
+        Optional<Album> album = repository.findById(id);
+        if (album.isPresent()) {
+            return album;
+        } else {
+            throw new AlbumNotFoundException(String.format("Cannot find Album with id '%d'", id));
+        }
     }
 
     @Override
@@ -35,38 +41,58 @@ public class RecordShopServiceImpl implements RecordShopService {
 
     @Override
     public Album updateAlbum(Long id, int newQuantity) {
-        Optional<Album> updatedAlbum =
-                repository.findById(id)
-                .map(oldAlbum -> {
-                    oldAlbum.setQuantity(newQuantity);
-                    return repository.save(oldAlbum);
-                });
-        return updatedAlbum.orElse(null);
+        Optional<Album> album = repository.findById(id);
+        if (album.isPresent()) {
+            album = album.map(oldAlbum -> {oldAlbum.setQuantity(newQuantity);
+                    return repository.save(oldAlbum);}
+            );
+        } else {
+            throw new AlbumNotFoundException(String.format("Cannot find Album with id '%d'", id));
+        }
+        return album.get();
     }
 
     @Override
     public void deleteAlbumById(Long id) {
-        repository.deleteById(id);
+        if (repository.findById(id).isPresent()) {
+            repository.deleteById(id);
+        } else {
+            throw new AlbumNotFoundException(String.format("Cannot find Album with id '%d'", id));
+        }
     }
 
     @Override
-    public List<Album> getAlbumsByArtiste(String artiste) {
-        return repository.findByArtiste(artiste);
+    public List<Album> getAlbumsByArtist(String artist) {
+        if (repository.findByArtist(artist).isEmpty()) {
+            throw new AlbumNotFoundException(String.format("Cannot find any album with artist name '%s'", artist));
+        }
+        return repository.findByArtist(artist);
     }
 
     @Override
     public List<Album> getAlbumsByGenre(Album.Genre genre) {
-        return repository.findByGenre(genre);
+        if (repository.findByGenre(genre).isEmpty()) {
+            throw new AlbumNotFoundException(String.format("Cannot find any album belonging to the genre '%s'", genre));
+        } else {
+            return repository.findByGenre(genre);
+        }
     }
 
     @Override
     public List<Album> getAlbumsByYear(Year year) {
-        return repository.findByYear(year);
+        if (repository.findByYear(year).isEmpty()) {
+            throw new AlbumNotFoundException(String.format("Cannot find any albums with release year '%s'", year));
+        } else {
+            return repository.findByYear(year);
+        }
     }
 
     @Override
     public String getAlbumInfoByName(String name) {
-        return repository.findByName(name).toString();
+        if (repository.findByName(name) == null) {
+            throw new AlbumNotFoundException(String.format("Cannot find any album with name '%s'", name));
+        } else {
+            return repository.findByName(name).toString();
+        }
     }
-
 }

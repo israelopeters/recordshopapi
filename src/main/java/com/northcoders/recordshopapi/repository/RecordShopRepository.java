@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface RecordShopRepository extends CrudRepository<Album, Long> {
-    @Query("SELECT A FROM Album A where A.artiste = ?1")
-    List<Album> findByArtiste(String artiste);
+    @Query("SELECT A FROM Album A where A.artist = ?1")
+    List<Album> findByArtist(String artist);
 
     @Query("SELECT G FROM Album G where G.genre = ?1")
     List<Album> findByGenre(Album.Genre genre);

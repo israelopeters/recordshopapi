@@ -1,10 +1,7 @@
 package com.northcoders.recordshopapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.CreatorProperty;
 import com.northcoders.recordshopapi.model.Album;
-import com.northcoders.recordshopapi.repository.RecordShopRepository;
-import com.northcoders.recordshopapi.service.RecordShopService;
 import com.northcoders.recordshopapi.service.RecordShopServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +11,6 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -28,7 +24,6 @@ import java.util.Optional;
 
 import static com.northcoders.recordshopapi.model.Album.Genre.JAZZ;
 import static com.northcoders.recordshopapi.model.Album.Genre.ROCK;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc
@@ -76,13 +71,13 @@ class RecordShopControllerTest {
     @DisplayName("GET /{id} returns the album with given id and the OK status code")
     void getAlbumById() throws Exception {
         //Arrange
-        Album albumOne = new Album(1L, "Album1", "Artiste1", ROCK, Year.of(2001), 10, "Good Album1", 5);
+        Album albumOne = new Album(1L, "Album1", "Artist1", ROCK, Year.of(2001), 10, "Good Album1", 5);
         when(recordShopServiceImpl.getAlbumById(1L)).thenReturn(Optional.of(albumOne));
 
         //Act and Assert
         this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/albums/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.artiste").value("Artiste1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artist").value("Artist1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Good Album1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value("ROCK"));
     }
@@ -91,7 +86,7 @@ class RecordShopControllerTest {
     @DisplayName("POST returns the album and a CREATED status code")
     public void addAlbum() throws Exception {
         //Arrange
-        Album album = new Album(1L, "Album1", "Artiste1", ROCK, Year.of(2001), 10, "Good Album1", 5);
+        Album album = new Album(1L, "Album1", "Artist1", ROCK, Year.of(2001), 10, "Good Album1", 5);
         when(recordShopServiceImpl.addAlbum(album)).thenReturn(album);
 
         //Act and Assert
@@ -100,7 +95,7 @@ class RecordShopControllerTest {
                 .content(mapper.writeValueAsString(album))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.artiste").value("Artiste1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artist").value("Artist1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.year").value("2001"));
 
         verify(recordShopServiceImpl, times(1)).addAlbum(album);
@@ -111,8 +106,8 @@ class RecordShopControllerTest {
     @DisplayName("PUT returns the updated album and the ACCEPTED status code")
     public void updateAlbum () throws Exception {
         //Arrange
-        Album originalAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7);
-        Album updatedAlbum = new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2002), 20, "Fine Album2", 6);
+        Album originalAlbum = new Album(2L, "Album2", "ArtistName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7);
+        Album updatedAlbum = new Album(2L, "Album2", "ArtistName2", JAZZ, Year.of(2002), 20, "Fine Album2", 6);
 
         when(recordShopServiceImpl.updateAlbum(2L, 6)).thenReturn(updatedAlbum);
 
@@ -137,21 +132,21 @@ class RecordShopControllerTest {
     }
 
     @Test
-    @DisplayName("getAlbumByArtiste returns a list of albums with the given artiste name and the OK status code")
-    void getAlbumByArtiste() throws Exception {
+    @DisplayName("getAlbumByArtist returns a list of albums with the given artist name and the OK status code")
+    void getAlbumByArtist() throws Exception {
         //Arrange
         List<Album> albums = List.of(
-                new Album(1L, "Album1", "ArtisteName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
-                new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7),
-                new Album(3L, "Album3", "ArtisteName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
+                new Album(1L, "Album1", "ArtistName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtistName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtistName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
         );
-        when(recordShopServiceImpl.getAlbumsByArtiste("ArtisteName2")).thenReturn(albums.subList(1,3));
+        when(recordShopServiceImpl.getAlbumsByArtist("ArtistName2")).thenReturn(albums.subList(1,3));
 
         //Act and Assert
-        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/albums/artiste?artiste=ArtisteName2"))
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/albums/artist?artist=ArtistName2"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].artiste").value("ArtisteName2"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].artiste").value("ArtisteName2"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].artist").value("ArtistName2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].artist").value("ArtistName2"));
     }
 
     @Test
@@ -159,9 +154,9 @@ class RecordShopControllerTest {
     void getAlbumByGenre() throws Exception {
         //Arrange
         List<Album> albums = List.of(
-                new Album(1L, "Album1", "ArtisteName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
-                new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7),
-                new Album(3L, "Album3", "ArtisteName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
+                new Album(1L, "Album1", "ArtistName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtistName2", JAZZ, Year.of(2002), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtistName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
         );
         when(recordShopServiceImpl.getAlbumsByGenre(Album.Genre.JAZZ)).thenReturn(albums.subList(1, 3));
 
@@ -177,9 +172,9 @@ class RecordShopControllerTest {
     void getAlbumByYear() throws Exception {
         //Arrange
         List<Album> albums = List.of(
-                new Album(1L, "Album1", "ArtisteName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
-                new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2001), 20, "Fine Album2", 7),
-                new Album(3L, "Album3", "ArtisteName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
+                new Album(1L, "Album1", "ArtistName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtistName2", JAZZ, Year.of(2001), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtistName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
         );
         when(recordShopServiceImpl.getAlbumsByYear(Year.of(2001))).thenReturn(albums.subList(0, 2));
 
@@ -195,9 +190,9 @@ class RecordShopControllerTest {
     void getAlbumInfoByName() throws Exception {
         //Arrange
         List<Album> albums = List.of(
-                new Album(1L, "Album1", "ArtisteName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
-                new Album(2L, "Album2", "ArtisteName2", JAZZ, Year.of(2001), 20, "Fine Album2", 7),
-                new Album(3L, "Album3", "ArtisteName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
+                new Album(1L, "Album1", "ArtistName1", ROCK, Year.of(2001), 10, "Good Album1", 5),
+                new Album(2L, "Album2", "ArtistName2", JAZZ, Year.of(2001), 20, "Fine Album2", 7),
+                new Album(3L, "Album3", "ArtistName2", JAZZ, Year.of(2003), 30, "Great Album3", 9)
         );
         when(recordShopServiceImpl.getAlbumInfoByName("Album3")).thenReturn(albums.get(2).toString());
 

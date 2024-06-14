@@ -1,8 +1,6 @@
 package com.northcoders.recordshopapi.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.YearDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.YearSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +29,7 @@ public class Album {
     String name;
 
     @Column(nullable = false)
-    String artiste;
+    String artist;
 
     @Column(nullable = false)
     Genre genre;
