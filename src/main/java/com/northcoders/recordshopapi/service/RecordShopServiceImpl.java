@@ -5,6 +5,7 @@ import com.northcoders.recordshopapi.model.Album;
 import com.northcoders.recordshopapi.repository.RecordShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ public class RecordShopServiceImpl implements RecordShopService {
     }
 
     @Override
+    @CachePut(value = "album", key = "#id")
     public Album updateAlbum(Long id, int newQuantity) {
         Optional<Album> album = repository.findById(id);
         if (album.isPresent()) {
