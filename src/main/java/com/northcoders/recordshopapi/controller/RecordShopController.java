@@ -2,6 +2,7 @@ package com.northcoders.recordshopapi.controller;
 
 import com.northcoders.recordshopapi.model.Album;
 import com.northcoders.recordshopapi.service.RecordShopService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Year;
 import java.util.List;
 
+@Log4j2
 @RestController
 @RequestMapping("/api/v1/albums")
 public class RecordShopController {
@@ -24,7 +26,12 @@ public class RecordShopController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Album> getAlbumById(@PathVariable long id) {
-        return new ResponseEntity<>(recordShopService.getAlbumById(id).get(), HttpStatus.OK);
+        log.info("Request received.");
+        long start = System.currentTimeMillis();
+        Album album = recordShopService.getAlbumById(id).get();
+        long end = System.currentTimeMillis();
+        log.info(String.format("Album retrieved in %d", end - start));
+        return new ResponseEntity<>(album, HttpStatus.OK);
     }
 
     @PostMapping("/add")

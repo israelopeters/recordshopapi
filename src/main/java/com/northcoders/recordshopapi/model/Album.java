@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.Year;
 
 @Entity
@@ -18,7 +19,7 @@ import java.time.Year;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Album {
+public class Album implements Serializable {
 
     @Id
     @GeneratedValue

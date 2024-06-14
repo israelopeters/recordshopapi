@@ -4,6 +4,9 @@ import com.northcoders.recordshopapi.exception.AlbumNotFoundException;
 import com.northcoders.recordshopapi.model.Album;
 import com.northcoders.recordshopapi.repository.RecordShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
@@ -25,7 +28,9 @@ public class RecordShopServiceImpl implements RecordShopService {
     }
 
     @Override
+    @Cacheable(value = "album", key = "#id")
     public Optional<Album> getAlbumById(Long id) {
+        System.out.println("Retrieving album...");
         Optional<Album> album = repository.findById(id);
         if (album.isPresent()) {
             return album;
