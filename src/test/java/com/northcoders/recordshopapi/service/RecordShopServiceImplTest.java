@@ -1,5 +1,6 @@
 package com.northcoders.recordshopapi.service;
 
+import com.northcoders.recordshopapi.exception.AlbumNotFoundException;
 import com.northcoders.recordshopapi.model.Album;
 import com.northcoders.recordshopapi.repository.RecordShopRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -46,21 +47,20 @@ public class RecordShopServiceImplTest {
     }
 
     @Test
-    @DisplayName("getAllAlbumById() returns album of id")
+    @DisplayName("getAlbumById() returns album of id")
     public void getAlbumByIdTest() {
         //Arrange
         Album expectedOne = new Album(1L, "Album1", "AlbumName1", ROCK, Year.of(2001), 10, "Good Album1", 5);
 
         when(repository.findById(1L)).thenReturn(Optional.of(expectedOne));
-        when(repository.findById(3L)).thenReturn(Optional.empty());
+        when(repository.findById(3L)).thenThrow(AlbumNotFoundException.class);
 
         //Act
         Album actualOne = recordShopServiceImpl.getAlbumById(1L).get();
-        Optional<Album> actualTwo = recordShopServiceImpl.getAlbumById(3L);
 
         //Assert
         assertThat(actualOne).isEqualTo(expectedOne);
-        assertTrue(actualTwo.isEmpty());
+        assertThrows(AlbumNotFoundException.class, () -> recordShopServiceImpl.getAlbumById(3L));
     }
 
     @Test
