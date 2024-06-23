@@ -2,10 +2,8 @@ package com.northcoders.recordshopapi.controller;
 
 import com.northcoders.recordshopapi.model.Album;
 import com.northcoders.recordshopapi.service.RecordShopService;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
