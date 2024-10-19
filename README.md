@@ -5,7 +5,7 @@ This is the API for The Record Shop stocking app, which allows a user to get all
 ## Getting Started
 
 For a comprehensive documentation on the API and its endpoints, please see the SwaggerUI page here: [The Record Shop](http://recordshopapi-env.eba-gmyh6wzs.eu-west-2.elasticbeanstalk.com/api/v1/albums/docs). 
-Also see "Running locally" for notes on how to get a copy of the project and run it on your local machine testing purposes.
+Also see "Running locally" below for notes on how to run the application on your local machine for testing purposes.
 
 ## Using the API
 
