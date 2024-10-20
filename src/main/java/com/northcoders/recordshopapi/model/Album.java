@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.Year;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
